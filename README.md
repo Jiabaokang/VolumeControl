@@ -109,7 +109,7 @@ Gradle 从本机 `signing/sign_key.properties` 读取签名配置，使用 UTF-8
 
 ```properties
 # storeFile 相对项目根目录
-storeFile=signing/sign_key.p12
+storeFile=signing/你的发布签名.p12
 storeType=PKCS12
 storePassword=填写密钥库密码
 keyAlias=填写密钥别名
