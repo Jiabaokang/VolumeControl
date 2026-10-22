@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.media.AudioManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -23,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.ljrh.volumecontrol.ui.theme.VolumeControlTheme
 
 class MainActivity : ComponentActivity() {
@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     },
                     onOpenSettings = {
                         startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            Uri.parse("package:$packageName")))
+                            "package:$packageName".toUri()))
                     },
                     onAddTile = ::addTile
                 )
@@ -98,14 +98,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun addTile(increase: Boolean) {
+    private fun addTile() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
-        val service = if (increase) VolumeUpTileService::class.java else VolumeDownTileService::class.java
-        val label = if (increase) R.string.volume_up else R.string.volume_down
-        val icon = if (increase) R.drawable.ic_volume_up else R.drawable.ic_volume_down
         try {
             getSystemService(StatusBarManager::class.java).requestAddTileService(
-                ComponentName(this, service), getString(label), Icon.createWithResource(this, icon),
+                ComponentName(this, MediaVolumeTileService::class.java),
+                getString(R.string.volume_tile_label),
+                Icon.createWithResource(this, R.drawable.ic_volume),
                 mainExecutor
             ) { result ->
                 val message = when (result) {

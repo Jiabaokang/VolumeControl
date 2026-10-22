@@ -41,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -64,7 +63,7 @@ fun VolumeControlScreen(
     onSetVolume: (Int) -> Unit,
     onToggleTorch: () -> Unit,
     onOpenSettings: () -> Unit,
-    onAddTile: (Boolean) -> Unit
+    onAddTile: () -> Unit
 ) {
     var showTileHelp by rememberSaveable { mutableStateOf(false) }
     val colors = MaterialTheme.colorScheme
@@ -98,11 +97,8 @@ fun VolumeControlScreen(
                             color = colors.onSurfaceVariant)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             // 系统只允许逐个请求添加，由用户在系统对话框确认。
-                            OutlinedButton(onClick = { onAddTile(true) }, modifier = Modifier.fillMaxWidth()) {
-                                Text(stringResource(R.string.quick_settings_add_up))
-                            }
-                            OutlinedButton(onClick = { onAddTile(false) }, modifier = Modifier.fillMaxWidth()) {
-                                Text(stringResource(R.string.quick_settings_add_down))
+                            OutlinedButton(onClick = onAddTile, modifier = Modifier.fillMaxWidth()) {
+                                Text(stringResource(R.string.quick_settings_add_tile))
                             }
                         } else {
                             Text(stringResource(R.string.quick_settings_instructions),
