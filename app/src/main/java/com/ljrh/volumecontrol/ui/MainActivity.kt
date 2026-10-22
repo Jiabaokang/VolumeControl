@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val volumeState by volumeViewModel.state.collectAsStateWithLifecycle()
             val torchState by torchViewModel.state.collectAsStateWithLifecycle()
+            val feedback by volumeViewModel.feedback.collectAsStateWithLifecycle()
             val permission = rememberLauncherForActivityResult(
                 ActivityResultContracts.RequestPermission()
             ) { granted ->
@@ -62,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     volumeError = volumeState.error,
                     cameraMessage = cameraMessage,
                     cameraNeedsSettings = cameraNeedsSettings,
-                    onAdjust = volumeViewModel::adjust,
+                    feedback = feedback,
                     onSetVolume = volumeViewModel::setValue,
                     onToggleTorch = {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
@@ -77,7 +78,8 @@ class MainActivity : ComponentActivity() {
                         startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                             "package:$packageName".toUri()))
                     },
-                    onAddTile = ::addTile
+                    onAddTile = ::addTile,
+                    onCycleFeedback = volumeViewModel::cycleFeedback
                 )
             }
         }

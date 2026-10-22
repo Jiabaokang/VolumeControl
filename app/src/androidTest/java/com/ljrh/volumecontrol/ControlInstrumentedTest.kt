@@ -5,7 +5,6 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.media.AudioManager
 import androidx.compose.ui.semantics.SemanticsActions
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -28,15 +27,15 @@ class ControlInstrumentedTest {
 
     private val audio get() = compose.activity.getSystemService(AudioManager::class.java)
 
-    // 抓住方向反转、误改铃声，以及按钮只更新界面却没改变系统音量的问题。
+    // 抓住方向反转、误改铃声，以及滑条只更新界面却没改变系统音量的问题。
     @Test
-    fun buttonsChangeRealMediaVolumeOneStep() = withRestoredVolume {
+    fun sliderChangesRealMediaVolumeWithoutTouchingRingtone() = withRestoredVolume {
         val ringtone = audio.getStreamVolume(AudioManager.STREAM_RING)
+        val target = minOf(9, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC))
         audio.setStreamVolume(AudioManager.STREAM_MUSIC, 3, 0)
-        compose.onNodeWithContentDescription("增大媒体音量").assertIsDisplayed().performClick()
-        compose.waitUntil { audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 4 }
-        compose.onNodeWithContentDescription("减小媒体音量").performClick()
-        compose.waitUntil { audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 3 }
+        compose.onNodeWithTag("volumeSlider")
+            .performSemanticsAction(SemanticsActions.SetProgress) { it(target.toFloat()) }
+        compose.waitUntil { audio.getStreamVolume(AudioManager.STREAM_MUSIC) == target }
         assertEquals(ringtone, audio.getStreamVolume(AudioManager.STREAM_RING))
     }
 
