@@ -13,3 +13,5 @@ local.properties
 # 本机 Release 签名及密码，不随源码提交。
 /signing/
 /app/release/
+
+.workbuddy
