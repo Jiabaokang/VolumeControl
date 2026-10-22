@@ -168,13 +168,16 @@ keyPassword=填写密钥密码
 app/
   src/main/
     java/com/ljrh/volumecontrol/
-      MainActivity.kt            # 主页面、权限和添加磁贴
-      VolumeControlScreen.kt     # Compose 主界面
-      MediaVolumeController.kt   # 媒体音量读写
-      TorchController.kt         # 闪光灯回调与状态
-      VolumeTileService.kt       # 新磁贴与旧磁贴兼容入口
-      VolumeSliderActivity.kt    # 弹窗式音量滑条
-      ui/theme/                  # 主题与字体
+      ui/                          # View 层
+        MainActivity.kt            # 主页面、权限和添加磁贴
+        VolumeControlScreen.kt     # Compose 主界面
+        VolumeSliderActivity.kt    # 弹窗式音量滑条
+        theme/                     # 主题与字体
+      data/                        # Model 层
+        MediaVolumeController.kt   # 媒体音量读写
+        TorchController.kt         # 闪光灯回调与状态
+      service/                     # 系统组件
+        MediaVolumeTileService.kt  # 唯一的媒体音量磁贴
     res/                         # 文案、图标和主题资源
     AndroidManifest.xml          # 组件与权限声明
   src/androidTest/                # 设备仪器化测试

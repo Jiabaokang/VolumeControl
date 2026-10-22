@@ -1,4 +1,4 @@
-package com.ljrh.volumecontrol
+package com.ljrh.volumecontrol.ui
 
 import android.media.AudioManager
 import android.os.Build
@@ -50,6 +50,9 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ljrh.volumecontrol.R
+import com.ljrh.volumecontrol.data.MediaVolumeState
+import com.ljrh.volumecontrol.data.TorchState
 import kotlin.math.roundToInt
 
 @Composable

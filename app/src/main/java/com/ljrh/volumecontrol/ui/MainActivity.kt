@@ -1,4 +1,4 @@
-package com.ljrh.volumecontrol
+package com.ljrh.volumecontrol.ui
 
 import android.Manifest
 import android.app.StatusBarManager
@@ -23,6 +23,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import com.ljrh.volumecontrol.R
+import com.ljrh.volumecontrol.data.MediaVolumeController
+import com.ljrh.volumecontrol.data.MediaVolumeState
+import com.ljrh.volumecontrol.data.TorchController
+import com.ljrh.volumecontrol.service.MediaVolumeTileService
 import com.ljrh.volumecontrol.ui.theme.VolumeControlTheme
 
 class MainActivity : ComponentActivity() {

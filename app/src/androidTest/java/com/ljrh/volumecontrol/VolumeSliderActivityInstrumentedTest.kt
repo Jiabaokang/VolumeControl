@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performSemanticsAction
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.ljrh.volumecontrol.ui.VolumeSliderActivity
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test

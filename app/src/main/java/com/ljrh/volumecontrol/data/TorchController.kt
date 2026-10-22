@@ -1,4 +1,4 @@
-package com.ljrh.volumecontrol
+package com.ljrh.volumecontrol.data
 
 import android.content.Context
 import android.hardware.camera2.CameraAccessException
@@ -9,6 +9,7 @@ import android.os.Looper
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.ljrh.volumecontrol.R
 
 data class TorchState(
     val hasFlash: Boolean = false,

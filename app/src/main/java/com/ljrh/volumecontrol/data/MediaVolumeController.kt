@@ -1,4 +1,4 @@
-package com.ljrh.volumecontrol
+package com.ljrh.volumecontrol.data
 
 import android.content.Context
 import android.media.AudioManager

@@ -1,4 +1,4 @@
-package com.ljrh.volumecontrol
+package com.ljrh.volumecontrol.ui
 
 import android.media.AudioManager
 import android.os.Bundle
@@ -37,6 +37,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Icon
+import com.ljrh.volumecontrol.R
+import com.ljrh.volumecontrol.data.MediaVolumeController
+import com.ljrh.volumecontrol.data.MediaVolumeState
 import com.ljrh.volumecontrol.ui.theme.VolumeControlTheme
 import kotlin.math.roundToInt
 

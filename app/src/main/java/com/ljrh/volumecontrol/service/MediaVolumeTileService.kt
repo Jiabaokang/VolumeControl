@@ -1,4 +1,4 @@
-package com.ljrh.volumecontrol
+package com.ljrh.volumecontrol.service
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
@@ -10,12 +10,15 @@ import android.os.Looper
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.widget.Toast
+import com.ljrh.volumecontrol.R
+import com.ljrh.volumecontrol.data.MediaVolumeController
+import com.ljrh.volumecontrol.ui.VolumeSliderActivity
 
 /**
- * Quick Settings tiles cannot host a custom slider on Android 12, so tapping a tile
- * collapses the shade and opens a native dialog containing a real SeekBar.
+ * 唯一的媒体音量磁贴。快捷面板不支持在磁贴里嵌入自定义滑条，因此点击后收起面板，
+ * 再打开承载真实 SeekBar 的 VolumeSliderActivity。
  */
-abstract class VolumeTileService : TileService() {
+class MediaVolumeTileService : TileService() {
     private val volume by lazy { MediaVolumeController(this) }
     private val handler = Handler(Looper.getMainLooper())
     private val refresh = object : Runnable {
@@ -88,6 +91,3 @@ abstract class VolumeTileService : TileService() {
         const val REFRESH_INTERVAL_MS = 500L
     }
 }
-
-/** 唯一的媒体音量磁贴：点击后收起面板并打开拖动式滑条。 */
-class MediaVolumeTileService : VolumeTileService()

@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VolumeControl">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.VolumeControl"
             android:windowSoftInputMode="adjustResize">
@@ -32,14 +32,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".VolumeSliderActivity"
+            android:name=".ui.VolumeSliderActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:finishOnTaskLaunch="true"
             android:theme="@style/Theme.VolumeControl.Popup" />
 
         <service
-            android:name=".MediaVolumeTileService"
+            android:name=".service.MediaVolumeTileService"
             android:exported="true"
             android:icon="@drawable/ic_volume"
             android:label="@string/volume_tile_label"
