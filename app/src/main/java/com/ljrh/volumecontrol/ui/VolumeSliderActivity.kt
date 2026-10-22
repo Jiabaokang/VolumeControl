@@ -2,11 +2,10 @@ package com.ljrh.volumecontrol.ui
 
 import android.media.AudioManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -23,8 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -36,25 +34,16 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.Icon
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ljrh.volumecontrol.R
-import com.ljrh.volumecontrol.data.MediaVolumeController
 import com.ljrh.volumecontrol.data.MediaVolumeState
 import com.ljrh.volumecontrol.ui.theme.VolumeControlTheme
+import com.ljrh.volumecontrol.viewmodel.VolumeViewModel
 import kotlin.math.roundToInt
 
 /** 供快捷设置磁贴使用的轻量悬浮音量窗口。 */
 class VolumeSliderActivity : ComponentActivity() {
-    private lateinit var volume: MediaVolumeController
-    private var volumeState by mutableStateOf(MediaVolumeState(0, 0, 1, false))
-    private var volumeError by mutableStateOf(false)
-    private val handler = Handler(Looper.getMainLooper())
-    private val refreshVolume = object : Runnable {
-        override fun run() {
-            volumeState = volume.read()
-            handler.postDelayed(this, REFRESH_INTERVAL_MS)
-        }
-    }
+    private val volumeViewModel: VolumeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,47 +52,17 @@ class VolumeSliderActivity : ComponentActivity() {
         window.setBackgroundDrawableResource(android.R.color.transparent)
         window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         window.attributes = window.attributes.apply { dimAmount = 0.35f }
-        volume = MediaVolumeController(this)
-        volumeState = volume.read()
         setContent {
+            val state by volumeViewModel.state.collectAsStateWithLifecycle()
             VolumeControlTheme {
                 VolumeSliderPopup(
-                    volume = volumeState,
-                    hasError = volumeError,
-                    onSetVolume = { value -> changeVolume { volume.set(value) } },
+                    volume = state.volume,
+                    hasError = state.error,
+                    onSetVolume = volumeViewModel::setValue,
                     onClose = ::finish
                 )
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        handler.removeCallbacks(refreshVolume)
-        handler.post(refreshVolume)
-    }
-
-    override fun onPause() {
-        handler.removeCallbacks(refreshVolume)
-        super.onPause()
-    }
-
-    private fun changeVolume(change: () -> MediaVolumeState) {
-        try {
-            volumeState = change()
-            volumeError = false
-        } catch (_: SecurityException) {
-            volumeError = true
-        }
-    }
-
-    override fun onDestroy() {
-        handler.removeCallbacks(refreshVolume)
-        super.onDestroy()
-    }
-
-    private companion object {
-        const val REFRESH_INTERVAL_MS = 400L
     }
 }
 

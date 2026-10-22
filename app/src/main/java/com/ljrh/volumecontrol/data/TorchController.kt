@@ -6,10 +6,10 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.os.Handler
 import android.os.Looper
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.ljrh.volumecontrol.R
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 data class TorchState(
     val hasFlash: Boolean = false,
@@ -24,19 +24,19 @@ class TorchController(context: Context) {
     private val camera = context.getSystemService(CameraManager::class.java)
     private var cameraId: String? = null
     private var observing = false
-    var state by mutableStateOf(TorchState())
-        private set
+    private val _state = MutableStateFlow(TorchState())
+    val state: StateFlow<TorchState> = _state.asStateFlow()
 
     private val callback = object : CameraManager.TorchCallback() {
         override fun onTorchModeChanged(id: String, enabled: Boolean) {
             if (id == cameraId) {
-                state = TorchState(hasFlash = true, available = true, enabled = enabled)
+                _state.value = TorchState(hasFlash = true, available = true, enabled = enabled)
             }
         }
 
         override fun onTorchModeUnavailable(id: String) {
             if (id == cameraId) {
-                state = state.copy(available = false, enabled = false, pending = false)
+                _state.value = _state.value.copy(available = false, enabled = false, pending = false)
             }
         }
     }
@@ -51,28 +51,28 @@ class TorchController(context: Context) {
                 camera.getCameraCharacteristics(it).get(CameraCharacteristics.LENS_FACING) ==
                     CameraCharacteristics.LENS_FACING_BACK
             } ?: cameras.firstOrNull()
-            state = state.copy(hasFlash = cameraId != null, errorRes = null)
+            _state.value = _state.value.copy(hasFlash = cameraId != null, errorRes = null)
             camera.registerTorchCallback(callback, Handler(Looper.getMainLooper()))
             observing = true
         } catch (_: CameraAccessException) {
-            state = state.copy(errorRes = R.string.flashlight_error)
+            _state.value = _state.value.copy(errorRes = R.string.flashlight_error)
         } catch (_: SecurityException) {
-            state = state.copy(errorRes = R.string.camera_permission_settings)
+            _state.value = _state.value.copy(errorRes = R.string.camera_permission_settings)
         }
     }
 
     fun toggle() {
         val id = cameraId ?: return
-        if (!state.available || state.pending) return
+        if (!_state.value.available || _state.value.pending) return
         try {
-            state = state.copy(pending = true, errorRes = null)
-            camera.setTorchMode(id, !state.enabled)
+            _state.value = _state.value.copy(pending = true, errorRes = null)
+            camera.setTorchMode(id, !_state.value.enabled)
         } catch (_: CameraAccessException) {
-            state = state.copy(pending = false, errorRes = R.string.flashlight_error)
+            _state.value = _state.value.copy(pending = false, errorRes = R.string.flashlight_error)
         } catch (_: SecurityException) {
-            state = state.copy(pending = false, errorRes = R.string.camera_permission_settings)
+            _state.value = _state.value.copy(pending = false, errorRes = R.string.camera_permission_settings)
         } catch (_: IllegalArgumentException) {
-            state = state.copy(pending = false, errorRes = R.string.flashlight_missing)
+            _state.value = _state.value.copy(pending = false, errorRes = R.string.flashlight_missing)
         }
     }
 

@@ -173,6 +173,9 @@ app/
         VolumeControlScreen.kt     # Compose 主界面
         VolumeSliderActivity.kt    # 弹窗式音量滑条
         theme/                     # 主题与字体
+      viewmodel/                   # ViewModel 层
+        VolumeViewModel.kt         # 音量状态与轮询
+        TorchViewModel.kt          # 手电筒状态
       data/                        # Model 层
         MediaVolumeController.kt   # 媒体音量读写
         TorchController.kt         # 闪光灯回调与状态

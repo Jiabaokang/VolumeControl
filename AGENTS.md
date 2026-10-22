@@ -4,7 +4,7 @@
 
 VolumeControl（轻控）是使用 Kotlin、Jetpack Compose 和 Material 3 开发的单模块 Android 应用，最低支持 API 29，编译与目标版本为 API 37。
 
-- `app/src/main/java/com/ljrh/volumecontrol/`：按 MVVM 分包。`ui/` 存放 Activity、Compose 页面和 `theme/` 主题样式；`data/` 存放媒体音量与手电筒控制；`service/` 存放快捷设置磁贴服务。
+- `app/src/main/java/com/ljrh/volumecontrol/`：按 MVVM 分包。`ui/` 存放 Activity、Compose 页面和 `theme/` 主题样式；`viewmodel/` 持有界面状态并通过 `StateFlow` 暴露；`data/` 存放媒体音量与手电筒控制；`service/` 存放快捷设置磁贴服务。
 - `app/src/main/res/`：中文文案、图标和浅色／深色资源；组件与权限在 `AndroidManifest.xml` 中声明。
 - `app/src/androidTest/`：设备仪器化测试；`docs/` 存放使用说明与验收记录；`artwork/` 存放应用图标原稿。
 - `gradle/libs.versions.toml`：统一管理依赖版本；`app/build/` 为生成产物目录。

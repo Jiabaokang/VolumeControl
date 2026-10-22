@@ -9,8 +9,6 @@ import android.graphics.drawable.Icon
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -18,48 +16,39 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ljrh.volumecontrol.R
-import com.ljrh.volumecontrol.data.MediaVolumeController
-import com.ljrh.volumecontrol.data.MediaVolumeState
-import com.ljrh.volumecontrol.data.TorchController
 import com.ljrh.volumecontrol.service.MediaVolumeTileService
 import com.ljrh.volumecontrol.ui.theme.VolumeControlTheme
+import com.ljrh.volumecontrol.viewmodel.TorchViewModel
+import com.ljrh.volumecontrol.viewmodel.VolumeViewModel
 
 class MainActivity : ComponentActivity() {
-    private lateinit var volume: MediaVolumeController
-    private lateinit var torch: TorchController
-    private var volumeState by mutableStateOf(MediaVolumeState(0, 0, 1, false))
-    private var volumeError by mutableStateOf(false)
+    private val volumeViewModel: VolumeViewModel by viewModels()
+    private val torchViewModel: TorchViewModel by viewModels()
     private var cameraMessage by mutableStateOf<Int?>(null)
     private var cameraNeedsSettings by mutableStateOf(false)
-    private val handler = Handler(Looper.getMainLooper())
-    private val refreshVolume = object : Runnable {
-        override fun run() {
-            volumeState = volume.read()
-            handler.postDelayed(this, 400)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         volumeControlStream = AudioManager.STREAM_MUSIC
-        volume = MediaVolumeController(this)
-        torch = TorchController(this)
-        volumeState = volume.read()
         setContent {
+            val volumeState by volumeViewModel.state.collectAsStateWithLifecycle()
+            val torchState by torchViewModel.state.collectAsStateWithLifecycle()
             val permission = rememberLauncherForActivityResult(
                 ActivityResultContracts.RequestPermission()
             ) { granted ->
                 if (granted) {
                     cameraMessage = null
                     cameraNeedsSettings = false
-                    torch.toggle()
+                    torchViewModel.toggle()
                 } else {
                     cameraNeedsSettings = !shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)
                     cameraMessage = if (cameraNeedsSettings) R.string.camera_permission_settings
@@ -68,18 +57,18 @@ class MainActivity : ComponentActivity() {
             }
             VolumeControlTheme {
                 VolumeControlScreen(
-                    volume = volumeState,
-                    torch = torch.state,
-                    volumeError = volumeError,
+                    volume = volumeState.volume,
+                    torch = torchState,
+                    volumeError = volumeState.error,
                     cameraMessage = cameraMessage,
                     cameraNeedsSettings = cameraNeedsSettings,
-                    onAdjust = { direction -> changeVolume { volume.adjust(direction) } },
-                    onSetVolume = { value -> changeVolume { volume.set(value) } },
+                    onAdjust = volumeViewModel::adjust,
+                    onSetVolume = volumeViewModel::setValue,
                     onToggleTorch = {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
                             PackageManager.PERMISSION_GRANTED) {
                             cameraMessage = null
-                            torch.toggle()
+                            torchViewModel.toggle()
                         } else {
                             permission.launch(Manifest.permission.CAMERA)
                         }
@@ -91,15 +80,6 @@ class MainActivity : ComponentActivity() {
                     onAddTile = ::addTile
                 )
             }
-        }
-    }
-
-    private fun changeVolume(change: () -> MediaVolumeState) {
-        try {
-            volumeState = change()
-            volumeError = false
-        } catch (_: SecurityException) {
-            volumeError = true
         }
     }
 
@@ -127,29 +107,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        torch.start()
-    }
-
     override fun onResume() {
         super.onResume()
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+        // 从设置页返回或首次授权后，清理已经过时的权限提示。
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
+            PackageManager.PERMISSION_GRANTED) {
             cameraMessage = null
             cameraNeedsSettings = false
         }
-        // 仅在前台读取系统音量，兼容耳机、系统面板等外部来源的变更。
-        handler.removeCallbacks(refreshVolume)
-        handler.post(refreshVolume)
-    }
-
-    override fun onPause() {
-        handler.removeCallbacks(refreshVolume)
-        super.onPause()
-    }
-
-    override fun onStop() {
-        torch.stop()
-        super.onStop()
     }
 }
