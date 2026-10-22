@@ -1,0 +1,81 @@
+{
+  "device": "ONEPLUS A6000 / Android 11 / API 30",
+  "before": {
+    "MUSIC": 4,
+    "RING": 0,
+    "ALARM": 6,
+    "NOTIFICATION": 0
+  },
+  "checks": [
+    {
+      "action": "从桌面下拉后实际点击音量＋磁贴",
+      "tile_before": "音量＋，当前 13%",
+      "after": {
+        "MUSIC": 5,
+        "RING": 0,
+        "ALARM": 6,
+        "NOTIFICATION": 0
+      }
+    },
+    {
+      "action": "实际点击音量－磁贴",
+      "tile_before": "音量－，当前 17%",
+      "after": {
+        "MUSIC": 4,
+        "RING": 0,
+        "ALARM": 6,
+        "NOTIFICATION": 0
+      }
+    },
+    {
+      "action": "连续触发音量＋五次",
+      "after": {
+        "MUSIC": 9,
+        "RING": 0,
+        "ALARM": 6,
+        "NOTIFICATION": 0
+      }
+    },
+    {
+      "action": "连续触发音量－五次",
+      "after": {
+        "MUSIC": 4,
+        "RING": 0,
+        "ALARM": 6,
+        "NOTIFICATION": 0
+      }
+    },
+    {
+      "action": "边界不越界",
+      "boundary": 0,
+      "after": {
+        "MUSIC": 0,
+        "RING": 0,
+        "ALARM": 6,
+        "NOTIFICATION": 0
+      }
+    },
+    {
+      "action": "边界不越界",
+      "boundary": 30,
+      "after": {
+        "MUSIC": 30,
+        "RING": 0,
+        "ALARM": 6,
+        "NOTIFICATION": 0
+      }
+    }
+  ],
+  "unchanged_streams": [
+    "RING",
+    "ALARM",
+    "NOTIFICATION"
+  ],
+  "passed": true,
+  "after_restore": {
+    "MUSIC": 4,
+    "RING": 0,
+    "ALARM": 6,
+    "NOTIFICATION": 0
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "device": {
+    "model": "ONEPLUS A6000",
+    "android": "11",
+    "sdk": 30
+  },
+  "build": "assembleDebug passed",
+  "lint": {
+    "errors": 0,
+    "warnings": 5,
+    "notes": "四条现有工具链/依赖升级提示，一条 adaptive icon 全画布图形提示"
+  },
+  "instrumentation": {
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "behaviors": [
+      "媒体音量按钮单档增减且不改铃声",
+      "滑块调节真实音量至上下限",
+      "外部音量变更同步至界面",
+      "手电筒开启和关闭"
+    ]
+  },
+  "unit_tests": "NO-SOURCE; 未把模板加法测试计入验证",
+  "installed_apk_matches_build": true,
+  "apk_sha256": "5ee252458f6b516dc4604e8ae7d5e70f73729138c0d1631e8d8cc9536408c879",
+  "torch_events": [
+    "10-22 21:15:50 : Torch for camera id 0 turned off for client PID 2449",
+    "10-22 21:14:28 : Torch for camera id 0 turned on for client PID 2449",
+    "10-22 21:14:07 : Torch for camera id 0 turned off for client PID 2449",
+    "10-22 21:14:06 : Torch for camera id 0 turned on for client PID 2449",
+    "10-22 21:14:05 : Torch for camera id 0 turned off for client PID 2449",
+    "10-22 21:14:04 : Torch for camera id 0 turned on for client PID 2449",
+    "10-22 21:14:03 : Torch for camera id 0 turned off for client PID 2449",
+    "10-22 21:14:01 : Torch for camera id 0 turned on for client PID 2449",
+    "10-22 21:09:22 : Torch for camera id 0 turned off for client PID 4838",
+    "10-22 21:09:22 : Torch for camera id 0 turned off for client PID 4838",
+    "10-22 21:09:22 : Torch for camera id 0 turned on for client PID 4838"
+  ],
+  "final_night_mode": "Night mode: no",
+  "final_torch_ui": "已关闭",
+  "scope": "仅此 Android 11 真机验收；Android 13+ 添加磁贴系统弹窗未做设备验收",
+  "long_press_tile_opens_app": true,
+  "scroll_to_tile_help": true,
+  "independent_code_review": "未发现有证据的高或中优先问题；只读审查，无额外产品代码修改"
+}
