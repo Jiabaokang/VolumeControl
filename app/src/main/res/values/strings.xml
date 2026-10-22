@@ -31,7 +31,7 @@
     <string name="quick_settings">下拉就能调音量</string>
     <string name="quick_settings_description">添加一个「媒体音量」磁贴，点击后即可拖动滑条调节音量。</string>
     <string name="quick_settings_instructions">1. 从屏幕顶部下拉两次，展开快捷面板\n2. 点编辑按钮（通常是铅笔图标）\n3. 将「媒体音量」拖到常用区域\n4. 点击磁贴，在弹出的滑条中左右拖动</string>
-    <string name="quick_settings_tip">升级时可移除旧版「音量＋」「音量－」磁贴，只保留一个「媒体音量」磁贴。长按磁贴可回到轻控。</string>
+    <string name="quick_settings_tip">点击磁贴会收起面板并弹出滑条，左右拖动即可调节；长按磁贴可回到轻控。</string>
     <string name="quick_settings_help">如何添加磁贴</string>
     <string name="quick_settings_add_tile">添加媒体音量磁贴</string>
     <string name="tile_added">磁贴已添加到快捷面板</string>

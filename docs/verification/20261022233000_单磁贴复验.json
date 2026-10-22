@@ -1,0 +1,43 @@
+{
+  "device": {
+    "model": "ONEPLUS A6000",
+    "android": "11",
+    "sdk": 30
+  },
+  "change": "清单与代码删除 VolumeUpTileService、VolumeDownTileService，只保留 MediaVolumeTileService",
+  "build": "assembleDebug passed",
+  "registered_tile_services": [
+    "com.ljrh.volumecontrol/.MediaVolumeTileService"
+  ],
+  "qs_tiles_first_entry": "custom(com.ljrh.volumecontrol/.MediaVolumeTileService)",
+  "checks": [
+    {
+      "action": "展开快捷面板",
+      "expect": "只有一个「媒体音量」磁贴",
+      "result": "passed",
+      "detail": "副标题「当前 47%」，旧加减磁贴已消失"
+    },
+    {
+      "action": "点击磁贴",
+      "expect": "面板收起并弹出滑条",
+      "result": "passed",
+      "detail": "mResumedActivity = com.ljrh.volumecontrol/.VolumeSliderActivity，弹窗显示 47%、第 14 档 / 共 30 档"
+    },
+    {
+      "action": "拖动弹窗滑条",
+      "expect": "改变真实系统媒体音量",
+      "result": "passed",
+      "detail": "STREAM_MUSIC 从 14 变为 26，弹窗显示 87%"
+    },
+    {
+      "action": "还原音量后回到面板",
+      "expect": "副标题跟随系统音量",
+      "result": "passed",
+      "detail": "音量设回 14 后副标题刷新为「当前 47%」"
+    }
+  ],
+  "volume_before": 14,
+  "volume_after_restore": 14,
+  "instrumentation": "未执行；Gradle 测试运行器会卸载应用并清除磁贴，本轮改为手工点击验证",
+  "notes": "sysui_qs_tiles 的原始值已备份到本机 /tmp/qs_tiles_backup.txt；其余磁贴顺序未改动"
+}

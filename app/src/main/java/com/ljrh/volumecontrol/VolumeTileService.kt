@@ -89,11 +89,5 @@ abstract class VolumeTileService : TileService() {
     }
 }
 
-/** 新增的单一媒体音量磁贴。 */
+/** 唯一的媒体音量磁贴：点击后收起面板并打开拖动式滑条。 */
 class MediaVolumeTileService : VolumeTileService()
-
-/** 兼容已经加入快捷面板的旧磁贴：点击后也打开拖动式音量滑条。 */
-class VolumeUpTileService : VolumeTileService()
-
-/** 兼容已经加入快捷面板的旧磁贴：点击后也打开拖动式音量滑条。 */
-class VolumeDownTileService : VolumeTileService()
